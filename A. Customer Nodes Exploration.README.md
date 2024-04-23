@@ -151,4 +151,5 @@ GROUP BY region_id;
 ***
 
 
-Click [here](https://github.com/manaswikamila05/8-Week-SQL-Challenge/blob/main/Case%20Study%20%23%204%20-%20Data%20Bank/B.%20Customer%20Transactions.md) to view the solution of B. Customer Transactions.md!
+Click [here](https://github.com/yugal-14/Danny-SQL-Challenge-Week-4/blob/main/B.%20Customer%20Transactions.README.MD
+) to view the solution of B. Customer Transactions.md!
