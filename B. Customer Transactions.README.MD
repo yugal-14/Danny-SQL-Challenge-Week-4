@@ -147,6 +147,8 @@ SUM(percentage_increase_flag) / COUNT(percentage_increase_flag) as percentage_of
 FROM PERCENT_INCREASE;
 ``` 
 	
-
-
 ***
+
+
+
+Click [here](https://github.com/yugal-14/Danny-SQL-Challenge-Week-4/blob/main/C.%20Data%20Allocation%20Challenge.README.MD) to view the solution of C. Data Allocation Challenge.md!
