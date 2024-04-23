@@ -1,4 +1,4 @@
-## :technologist::woman_technologist: Case Study #4: Data Bank - Data Allocation Challenge
+##  Case Study #4: Data Bank - Data Allocation Challenge
 
 To test out a few different hypotheses - the Data Bank team wants to run an experiment where different groups of customers would be allocated data using 3 different options:
 
