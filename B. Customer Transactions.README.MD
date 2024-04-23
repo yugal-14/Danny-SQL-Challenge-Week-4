@@ -98,9 +98,55 @@ FROM txn_monthly_balance_cte;
 ###  5. What is the percentage of customers who increase their closing balance by more than 5%?
 
 ```sql
+WITH CTE AS (
+SELECT 
+DATE_TRUNC('month',txn_date) as txn_month,
+txn_date,
+customer_id,
+SUM((CASE WHEN txn_type ='deposit' THEN txn_amount ELSE 0 END) - (CASE WHEN txn_type <>'deposit' THEN txn_amount ELSE 0 END)) as balance
+FROM customer_transactions
+GROUP BY DATE_TRUNC('month',txn_date),
+txn_date,
+customer_id
+)
+, BALANCES AS (
+SELECT 
+*
+,SUM(balance) OVER (PARTITION BY customer_id ORDER BY txn_date) as running_sum
+,ROW_NUMBER() OVER (PARTITION BY customer_id, txn_month ORDER BY txn_date DESC) as rn
+FROM CTE
+ORDER BY txn_date
+)
+,CLOSING_BALANCES AS (
+SELECT 
+customer_id,
+DATEADD('day',-1,DATEADD('month',1,txn_month)) as end_of_month,
+DATEADD('day',-1,txn_month) as previous_end_of_month,
+running_sum as closing_balance
+FROM BALANCES 
+WHERE rn = 1
+ORDER BY end_of_month
+)
+,PERCENT_INCREASE AS (
+SELECT 
+CB1.customer_id,
+CB1.end_of_month,
+CB1.closing_balance,
+CB2.closing_balance as next_month_closing_balance,
+(CB2.closing_balance / CB1.closing_balance) -1 as percentage_increase,
+CASE WHEN (CB2.closing_balance > CB1.closing_balance AND 
+(CB2.closing_balance / CB1.closing_balance) -1 > 0.05) THEN 1 ELSE 0 END as percentage_increase_flag
+FROM CLOSING_BALANCES as CB1
+INNER JOIN CLOSING_BALANCES as CB2 on CB1.end_of_month = CB2.previous_end_of_month 
+AND CB1.customer_id = CB2.customer_id
+WHERE CB1.closing_balance <> 0
+)
 
+SELECT 
+SUM(percentage_increase_flag) / COUNT(percentage_increase_flag) as percentage_of_customers_increasing_balance
+FROM PERCENT_INCREASE;
 ``` 
 	
-#### Result set:
+
 
 ***
